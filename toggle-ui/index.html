@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp Bot Control</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #1a1a1a;
+      border-radius: 24px;
+      padding: 48px 40px;
+      text-align: center;
+      width: 340px;
+      border: 1px solid #2a2a2a;
+    }
+    h1 { font-size: 20px; font-weight: 600; margin-bottom: 8px; color: #fff; }
+    .subtitle { color: #888; font-size: 14px; margin-bottom: 36px; }
+
+    .status-dot {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px;
+      transition: all 0.4s ease;
+    }
+    .status-dot.active { background: rgba(34,197,94,0.15); border: 2px solid #22c55e; }
+    .status-dot.inactive { background: rgba(239,68,68,0.15); border: 2px solid #ef4444; }
+
+    .status-text {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .status-text.active { color: #22c55e; }
+    .status-text.inactive { color: #ef4444; }
+
+    .status-sub { color: #666; font-size: 13px; margin-bottom: 36px; }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    button.turn-on { background: #22c55e; color: #000; }
+    button.turn-off { background: #ef4444; color: #fff; }
+    button:hover { opacity: 0.85; transform: scale(0.98); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .divider { border: none; border-top: 1px solid #2a2a2a; margin: 24px 0; }
+
+    .quick-btns { display: flex; gap: 10px; }
+    .quick-btns button {
+      flex: 1;
+      padding: 12px;
+      font-size: 13px;
+      background: #2a2a2a;
+      color: #ccc;
+      border-radius: 10px;
+    }
+    .quick-btns button:hover { background: #333; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>WhatsApp Bot</h1>
+    <p class="subtitle">Auto-reply control panel</p>
+
+    <div id="dot" class="status-dot inactive">🤖</div>
+    <div id="statusText" class="status-text inactive">Loading...</div>
+    <div id="statusSub" class="status-sub">Checking status...</div>
+
+    <button id="mainBtn" onclick="toggle()" disabled>Loading...</button>
+
+    <hr class="divider" />
+
+    <div class="quick-btns">
+      <button onclick="setPresent(true)">🙋 I'm Here</button>
+      <button onclick="setPresent(false)">💤 I'm Away</button>
+    </div>
+  </div>
+
+  <script>
+    async function fetchStatus() {
+      const res = await fetch("/status");
+      const data = await res.json();
+      updateUI(data);
+    }
+
+    function updateUI(data) {
+      const dot = document.getElementById("dot");
+      const statusText = document.getElementById("statusText");
+      const statusSub = document.getElementById("statusSub");
+      const btn = document.getElementById("mainBtn");
+
+      if (data.botActive) {
+        dot.className = "status-dot active";
+        statusText.className = "status-text active";
+        statusText.textContent = "Bot is ON";
+        statusSub.textContent = "Auto-replying to your contacts";
+        btn.className = "turn-off";
+        btn.textContent = "Turn Bot OFF";
+      } else {
+        dot.className = "status-dot inactive";
+        statusText.className = "status-text inactive";
+        statusText.textContent = "Bot is OFF";
+        statusSub.textContent = "You are present — no auto-reply";
+        btn.className = "turn-on";
+        btn.textContent = "Turn Bot ON";
+      }
+      btn.disabled = false;
+    }
+
+    async function toggle() {
+      document.getElementById("mainBtn").disabled = true;
+      const res = await fetch("/toggle", { method: "POST" });
+      const data = await res.json();
+      updateUI(data);
+    }
+
+    async function setPresent(present) {
+      const res = await fetch("/set", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ present })
+      });
+      const data = await res.json();
+      updateUI(data);
+    }
+
+    fetchStatus();
+    setInterval(fetchStatus, 5000);
+  </script>
+</body>
+</html>
