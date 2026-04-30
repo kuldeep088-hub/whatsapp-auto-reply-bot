@@ -1,12 +1,12 @@
 # WhatsApp AI Auto-Reply Bot
 
-A personal WhatsApp bot that auto-replies to messages in your own voice using AI. When you're away or asleep, it reads incoming messages and replies naturally — so your contacts never know it's a bot.
+A personal WhatsApp bot that auto-replies to messages in your own voice using AI. When you're away or asleep, it reads incoming messages and replies naturally, so your contacts never know it's a bot.
 
 ## Features
 
 - Replies in your personal tone and language (Hinglish supported)
 - Per-contact profiles: different style for girlfriend, best friend, etc.
-- Conversation memory — keeps context of last 15 messages per contact
+- Conversation memory: keeps context of last 15 messages per contact
 - Typing simulation with random delay (3–7 seconds) for realism
 - Auto-schedule: bot turns ON at night, OFF in the morning
 - Web UI to toggle the bot on/off instantly from your browser
@@ -58,7 +58,7 @@ Edit `contacts.json` with the phone numbers and profiles of people you want the 
 
 ### 5. Edit your persona
 
-Edit `persona.txt` to describe yourself — your name, how you talk, your interests, personality. The more detail, the more accurate the replies.
+Edit `persona.txt` to describe yourself: your name, how you talk, your interests, personality. The more detail, the more accurate the replies.
 
 ### 6. Start the bot
 
@@ -101,13 +101,13 @@ Edit `config.js` to change:
 
 ## Tech Stack
 
-- [whatsapp-web.js](https://github.com/pedroslopez/whatsapp-web.js) — WhatsApp Web automation
-- [Groq API](https://console.groq.com) — LLaMA-3.3-70B inference
-- [Express](https://expressjs.com) — Toggle web server
-- [node-cron](https://github.com/node-cron/node-cron) — Auto-scheduling
+- [whatsapp-web.js](https://github.com/pedroslopez/whatsapp-web.js) - WhatsApp Web automation
+- [Groq API](https://console.groq.com) - LLaMA-3.3-70B inference
+- [Express](https://expressjs.com) - Toggle web server
+- [node-cron](https://github.com/node-cron/node-cron) - Auto-scheduling
 
 ## Important Notes
 
-- Keep your `.env` and `.wwebjs_auth/` folder private — never commit them
+- Keep your `.env` and `.wwebjs_auth/` folder private, never commit them
 - This is for personal use only
 - Message content is sent to Groq's API for inference
